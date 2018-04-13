@@ -13,9 +13,11 @@ export default class Note extends Component {
   render() {
     return (
       <View style = { styles.note }>
-        <Text style = { styles.noteText }>{ this.props.val.date }</Text>
-        <Text style = { styles.noteText }>{ this.props.val.note }</Text>
-
+        <TouchableOpacity onPress = { this.props.viewMethod } >
+          <Text style = { styles.noteText }>{ this.props.val.date }</Text>
+          <Text style = { styles.noteText }>{ this.props.val.note }</Text>
+        </TouchableOpacity>
+        
         <TouchableOpacity onPress={ this.props.deleteMethod } style = { styles.deleteNote }>
           <Text>x</Text>
         </TouchableOpacity>
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
       margin: 10,
       paddingRight: 100,
       backgroundColor: 'yellow',
-      
+
   },
   noteText: {
     paddingLeft: 20,

@@ -24,8 +24,13 @@ export default class Main extends Component {
 
   render() {
     let notes = this.state.noteArray.map((val, key) => {
-      return <Note key = { key } keyval = { key } val = { val }
-        deleteMethod = { () => this.deleteNote(key) } />
+      return <Note
+        key = { key }
+        keyval = { key }
+        val = { val }
+        deleteMethod = { () => this.deleteNote(key) }
+        viewMethod = { () => this.viewNote(key) }
+      />
     })
     return (
       <View style={styles.container}>
@@ -66,10 +71,17 @@ export default class Main extends Component {
     }
   }
 
+  viewNote(key){
+    let date = this.state.noteArray[key].date
+    let note = 'comment: \n' + this.state.noteArray[key].note
+    alert(date + "\n" + note)
+  }
+
   deleteNote(key){
     this.state.noteArray.splice(key, 1)
     this.setState({ noteArray: this.state.noteArray })
   }
+
 }
 
 const styles = StyleSheet.create({
