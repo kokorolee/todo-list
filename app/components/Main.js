@@ -1,138 +1,115 @@
-/* @flow */
+import React from 'react';
+import { StyleSheet, Text, View, StatusBar, ListView } from 'react-native';
+import { Container, Content, Header, Form, Input, Item, Button, Label, Icon, List, ListItem } from 'native-base'
 
-import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  ScrollView,
-  TouchableOpacity
-} from 'react-native';
+import * as firebase from 'firebase';
 
-import Note from './Note.js'
+// Initialize Firebase
+const firebaseConfig = {
+  // ADD YOUR FIREBASE CREDENTIALS
+  apiKey: "AIzaSyBBGRwIJpbUIVRl8TIaA-yy2BIGqGhsU3Y",
+  authDomain: "todo-list-reactinative.firebaseapp.com",
+  databaseURL: "https://todo-list-reactinative.firebaseio.com",
+  projectId: "todo-list-reactinative",
+  storageBucket: "todo-list-reactinative.appspot.com",
+  messagingSenderId: "402577319804"
 
-export default class Main extends Component {
+};
 
-  constructor(props){
+firebase.initializeApp(firebaseConfig);
+
+var data = []
+
+export default class App extends React.Component {
+
+  constructor(props) {
     super(props);
+    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     this.state = {
-      noteArray: [],
-      noteText: '',
+      listViewData: data,
+      newTodo: ""
     }
   }
 
-  render() {
-    let notes = this.state.noteArray.map((val, key) => {
-      return <Note
-        key = { key }
-        keyval = { key }
-        val = { val }
-        deleteMethod = { () => this.deleteNote(key) }
-        viewMethod = { () => this.viewNote(key) }
-      />
+  componentDidMount() {
+    var that = this
+    firebase.database().ref('/todos').on('child_added', function (data) {
+      var newData = [...that.state.listViewData]
+      newData.push(data)
+      console.log(newData)
+      that.setState({ listViewData: newData })
     })
+  }
+
+  addRow(data) {
+    var key = firebase.database().ref('/todos').push().key
+    firebase.database().ref('/todos').child(key).set({ name: data, time: Date.now() })
+    // this.setState({ listViewData: [""] })
+  }
+
+  async deleteRow(secId, rowId, rowMap, data) {
+    await firebase.database().ref('todos/' + data.key).set(null)
+    rowMap[`${secId}${rowId}`].props.closeRow();
+    var newData = [...this.state.listViewData];
+    newData.splice(rowId, 1)
+    this.setState({ listViewData: newData });
+  }
+
+  showInformation() {
+  }
+  render() {
     return (
-      <View style={styles.container}>
-        <View style = { styles.header }>
-          <Text style = { styles.headerText } > -Note- </Text>
-        </View>
+      <Container style={styles.container}>
+        <Header style={{ marginTop: StatusBar.currentHeight }}>
+          <Content>
+            <Item>
+              <Input
+                onChangeText={(newTodo) => this.setState({ newTodo })}
+                placeholder="Add name"
+              />
+              <Button onPress={() => this.addRow(this.state.newTodo)}>
+                <Icon name="add" />
+              </Button>
+            </Item>
+          </Content>
+        </Header>
 
-        <ScrollView style = { styles.scrollContainer }>
-            { notes }
-        </ScrollView>
+        <Content>
+          <List
+            enableEmptySections
+            dataSource={this.ds.cloneWithRows(this.state.listViewData)}
+            renderRow={data =>
+                <ListItem>
+                  <Text style = { styles.textView }> {data.val().time}</Text>
+                  <Text> {data.val().name}</Text>
+                </ListItem>
+            }
+            renderLeftHiddenRow={data =>
+              <Button full onPress={() => this.addRow(data)} >
+                <Icon name="information-circle" />
+              </Button>
+            }
+            renderRightHiddenRow={(data, secId, rowId, rowMap) =>
+              <Button full danger onPress={() => this.deleteRow(secId, rowId, rowMap, data)}>
+                <Icon name="trash" />
+              </Button>
 
-        <View style = { styles.footer }>
-          <TextInput
-            style = { styles.textInput }
-            onChangeText = { (noteText) => this.setState({ noteText }) }
-            value = { this.state.noteText }
-            placeholder = 'note'
-            placeholderTextColor = '#fff'
+            }
+            leftOpenValue={-75}
+            rightOpenValue={-75}
           />
-        </View>
-        <TouchableOpacity style = { styles.addButton } onPress = { this.addNote.bind(this) }>
-          <Text style = { styles.textAddButton }>+</Text>
-        </TouchableOpacity>
-      </View>
+        </Content>
+      </Container>
     );
-
-
   }
-  addNote(){
-    if (this.state.noteText){
-      let d = new Date();
-      this.state.noteArray.push({
-        'date': d.getFullYear() + "/" + d.getMonth() + 1 + "/" + d.getDate(),
-        'note': this.state.noteText
-      });
-      this.setState({ noteArray: this.state.noteArray })
-      this.setState({ noteText: '' })
-    }
-  }
-
-  viewNote(key){
-    let date = this.state.noteArray[key].date
-    let note = 'comment: \n' + this.state.noteArray[key].note
-    alert(date + "\n" + note)
-  }
-
-  deleteNote(key){
-    this.state.noteArray.splice(key, 1)
-    this.setState({ noteArray: this.state.noteArray })
-  }
-
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
-  header: {
-    top: 50,
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'skyblue',
-  },
-  headerText: {
-    fontSize: 20,
-    color: 'black'
-  },
-  scrollContainer: {
-    flex: 1,
-    marginBottom: 100,
-  },
-  footer: {
-    position: 'absolute',
-
-    width: '100%',
-    zIndex: 10,
-    backgroundColor: '#fefefe',
-
-    bottom: 10,
-    left: 0,
-    right: 0,
-  },
-  textInput: {
-    alignSelf: 'stretch',
-    backgroundColor: '#252525',
-    height: 50,
-  },
-  addButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    zIndex: 11,
-    elevation: 11,
-    backgroundColor: '#26b624',
-    width: 50,
-    height: 50,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-    alignItems: 'center',
-     borderRadius: 50,
-  },
-
+  textView: {
+    color: 'red'
+  }
 });
