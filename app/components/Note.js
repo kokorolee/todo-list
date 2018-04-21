@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-
+  CheckBox
 } from 'react-native';
 
 export default class Note extends Component {
@@ -14,10 +14,11 @@ export default class Note extends Component {
     return (
       <View style = { styles.note }>
         <TouchableOpacity onPress = { this.props.viewMethod } >
-          <Text style = { styles.noteText }>{ this.props.val.date }</Text>
-          <Text style = { styles.noteText }>{ this.props.val.note }</Text>
+          <Text style = { styles.noteText }>{ this.props.val.val().time }</Text>
+          <Text style = { styles.noteText }>{ this.props.val.val().name }</Text>
+          check
         </TouchableOpacity>
-        
+
         <TouchableOpacity onPress={ this.props.deleteMethod } style = { styles.deleteNote }>
           <Text>x</Text>
         </TouchableOpacity>
