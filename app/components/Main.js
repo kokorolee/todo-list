@@ -7,13 +7,15 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from 'react-native';
 
 import Note from './Note.js'
 import * as firebase from 'firebase'
 var data = [];
 
+var dataJson;
 const firebaseConfig = {
   apiKey: "AIzaSyBBGRwIJpbUIVRl8TIaA-yy2BIGqGhsU3Y",
   authDomain: "todo-list-reactinative.firebaseapp.com",
@@ -35,15 +37,17 @@ export default class Main extends Component {
       noteText: '',
     }
   }
-
-componentDidMount (){
-  var that = this
-  firebase.database().ref('/todos').on('child_added', function(data){
-    var newData = [...that.state.noteArray]
-    newData.push(data)
-    console.log(newData)
-    that.setState({noteArray: newData})
-  })
+componentDidMount = async() => {
+  try {
+    const val = await AsyncStorage.getItem('note_value')
+    if (val !== null) {
+      var data = JSON.parse(val)
+      console.log("data" + data )
+      this.setState({noteArray: data})
+    }
+  } catch (e) {
+    console.error(e)
+  }
 }
 
   render() {
@@ -52,10 +56,10 @@ componentDidMount (){
                 key = { key }
                 keyval = { key }
                 val = { val }
-                deleteMethod = { () => this.deleteNote(val.key) }
-                viewMethod = { () => this.viewNote(val.key) }
-                updateMethod = { () => this.updateNote(val.key) }
-                checkBoxMethod = { () => this.checkboxUpdate(val.key) }
+                deleteMethod = { () => this.deleteNote(val) }
+                viewMethod = { () => this.viewNote(val) }
+                updateMethod = { () => this.updateNote(val) }
+                checkBoxMethod = { () => this.checkboxUpdate(val) }
       />
     })
     return (
@@ -87,24 +91,40 @@ componentDidMount (){
   }
   async addNote(){
     if (this.state.noteText){
-      var key = firebase.database().ref('/todos').push().key
-      console.log(key);
-      console.log(this.state.noteText);
-      console.log(Date.now());
-      await firebase.database().ref('/todos').child(key).set({ name: this.state.noteText, time: Date.now(), checkbox: false })
-      this.setState({ noteText: '' })
+      this.state.noteArray.push({
+        'name': this.state.noteText,
+        'time': (new Date()).toString(),
+        'checked': false
+      })
     }
+    this.crudNote(this.state.noteArray);
+    this.setState({ noteText: '' })
   }
 
-  viewNote(key){
-
+  async viewNote(val){
+    alert(val.name)
+    console.log(val)
   }
-
+  checkboxUpdate(val){
+    // val = this.setState.noteArray
+    val.checked = !val.checked
+    this.crudNote(this.state.noteArray)
+  }
 
   async deleteNote(val){
     this.state.noteArray.splice(val, 1)
-    await firebase.database().ref('todos/' + val).set(null)
-    this.setState({ noteArray: this.state.noteArray })
+    this.crudNote(this.state.noteArray);
+
+  }
+
+  async crudNote(noteArray) {
+    this.setState({ noteArray: noteArray });
+    try {
+      let parseData = JSON.stringify(noteArray);
+      await AsyncStorage.setItem('note_value',  parseData);
+    } catch (error) {
+      console.log("Error");
+    }
   }
 }
 

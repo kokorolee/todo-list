@@ -5,18 +5,21 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  CheckBox
+  TouchableOpacity
 } from 'react-native';
+
+import {
+  CheckBox
+} from 'native-base'
 
 export default class Note extends Component {
   render() {
     return (
       <View style = { styles.note }>
         <TouchableOpacity onPress = { this.props.viewMethod } >
-          <Text style = { styles.noteText }>{ this.props.val.val().time }</Text>
-          <Text style = { styles.noteText }>{ this.props.val.val().name }</Text>
-          check
+          <Text style = { styles.noteText }>{ this.props.val.time }</Text>
+          <Text style = { styles.noteText, styles.noteName }>{ this.props.val.name }</Text>
+            <CheckBox onPress = { this.props.checkBoxMethod } checked={this.props.val.checked }  />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={ this.props.deleteMethod } style = { styles.deleteNote }>
@@ -39,6 +42,9 @@ const styles = StyleSheet.create({
   },
   noteText: {
     paddingLeft: 20,
+  },
+  noteName: {
+    fontSize: 20
   },
   deleteNote: {
     position: 'absolute',
