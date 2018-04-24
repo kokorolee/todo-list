@@ -114,7 +114,6 @@ componentDidMount = async() => {
   async deleteNote(val){
     this.state.noteArray.splice(val, 1)
     this.crudNote(this.state.noteArray);
-
   }
 
   async crudNote(noteArray) {

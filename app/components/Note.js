@@ -19,11 +19,12 @@ export default class Note extends Component {
         <TouchableOpacity onPress = { this.props.viewMethod } >
           <Text style = { styles.noteText }>{ this.props.val.time }</Text>
           <Text style = { styles.noteText, styles.noteName }>{ this.props.val.name }</Text>
-            <CheckBox onPress = { this.props.checkBoxMethod } checked={this.props.val.checked }  />
         </TouchableOpacity>
-
         <TouchableOpacity onPress={ this.props.deleteMethod } style = { styles.deleteNote }>
           <Text>x</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style = { styles.checkboxs }>
+          <CheckBox style = { styles.checkbox } onPress = { this.props.checkBoxMethod } checked={this.props.val.checked }  />
         </TouchableOpacity>
       </View>
     );
@@ -58,5 +59,16 @@ const styles = StyleSheet.create({
 
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  checkboxs: {
+    position: 'absolute',
+    right: 20,
+    bottom: 10,
+    height: 30,
+    width: 30,
+  },
+  checkbox: {
+    height: '100%',
+    width: '100%'
   }
 });
