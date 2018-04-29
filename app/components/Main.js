@@ -15,19 +15,6 @@ import Note from './Note.js'
 import * as firebase from 'firebase'
 var data = [];
 
-var dataJson;
-const firebaseConfig = {
-  apiKey: "AIzaSyBBGRwIJpbUIVRl8TIaA-yy2BIGqGhsU3Y",
-  authDomain: "todo-list-reactinative.firebaseapp.com",
-  databaseURL: "https://todo-list-reactinative.firebaseio.com",
-  projectId: "todo-list-reactinative",
-  storageBucket: "todo-list-reactinative.appspot.com",
-  messagingSenderId: "402577319804"
-
-};
-firebase.initializeApp(firebaseConfig);
-
-
 export default class Main extends Component {
 
   constructor(props){
@@ -58,7 +45,7 @@ componentDidMount = async() => {
                 val = { val }
                 deleteMethod = { () => this.deleteNote(val) }
                 viewMethod = { () => this.viewNote(val) }
-                updateMethod = { () => this.updateNote(val) }
+                updateMethod={this.updateMethod.bind(this)}
                 checkBoxMethod = { () => this.checkboxUpdate(val) }
       />
     })
@@ -110,7 +97,10 @@ componentDidMount = async() => {
     val.checked = !val.checked
     this.crudNote(this.state.noteArray)
   }
-
+  updateMethod(key, content) {
+    this.state.noteArray[key].name = content
+    this.crudNote(this.state.noteArray)
+   }
   async deleteNote(val){
     this.state.noteArray.splice(val, 1)
     this.crudNote(this.state.noteArray);
