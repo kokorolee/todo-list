@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 
 import Note from './Note.js'
-import * as firebase from 'firebase'
 var data = [];
 
 export default class Main extends Component {
@@ -29,7 +28,7 @@ componentDidMount = async() => {
     const val = await AsyncStorage.getItem('note_value')
     if (val !== null) {
       var data = JSON.parse(val)
-      console.log("data" + data )
+      console.log("data" + data.values )
       this.setState({noteArray: data})
     }
   } catch (e) {
@@ -47,8 +46,8 @@ componentDidMount = async() => {
                 viewMethod = { () => this.viewNote(val) }
                 updateMethod={this.updateMethod.bind(this)}
                 checkBoxMethod = { () => this.checkboxUpdate(val) }
-      />
-    })
+      />})
+
     return (
       <View style={styles.container}>
         <View style = { styles.header }>
@@ -59,12 +58,12 @@ componentDidMount = async() => {
             { notes }
         </ScrollView>
 
-        <View style = { styles.footer }>
+        <View style = { styles.inputWrapper }>
           <TextInput
             style = { styles.textInput }
             onChangeText = { (noteText) => this.setState({ noteText }) }
             value = { this.state.noteText }
-            placeholder = 'note'
+            placeholder = 'Add somethings ... '
             placeholderTextColor = '#fff'
           />
         </View>
@@ -73,8 +72,6 @@ componentDidMount = async() => {
         </TouchableOpacity>
       </View>
     );
-
-
   }
   async addNote(){
     if (this.state.noteText){
@@ -93,7 +90,6 @@ componentDidMount = async() => {
     console.log(val)
   }
   checkboxUpdate(val){
-    // val = this.setState.noteArray
     val.checked = !val.checked
     this.crudNote(this.state.noteArray)
   }
@@ -116,56 +112,58 @@ componentDidMount = async() => {
     }
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: 100,
+    backgroundColor: 'red'
   },
   header: {
-    top: 50,
+    top: 20,
     width: '100%',
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'skyblue',
+    zIndex: 10
   },
   headerText: {
     fontSize: 20,
     color: 'black'
   },
   scrollContainer: {
-    flex: 1,
-    marginBottom: 100,
+    marginBottom: 50,
+    backgroundColor: 'blue'
   },
-  footer: {
+  inputWrapper: {
     position: 'absolute',
 
     width: '100%',
     zIndex: 10,
     backgroundColor: '#fefefe',
 
-    bottom: 10,
+    top: 70,
     left: 0,
     right: 0,
   },
   textInput: {
     alignSelf: 'stretch',
-    backgroundColor: '#252525',
+    backgroundColor: '#40594c',
     height: 50,
+    paddingLeft: 20
   },
   addButton: {
     position: 'absolute',
-    bottom: 20,
+    top: 80,
     right: 20,
     zIndex: 11,
     elevation: 11,
     backgroundColor: '#26b624',
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     alignSelf: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
-     borderRadius: 50,
+    borderRadius: 50,
   },
-
 });
