@@ -8,27 +8,29 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  FlatList
 } from 'react-native';
 
 import Note from './Note.js'
+import { connect } from 'react-redux'
 var data = [];
 
-export default class Main extends Component {
-
+class Main extends Component {
   constructor(props){
     super(props);
     this.state = {
       noteArray: data,
       noteText: '',
     }
+    this.addNote = this.addNote.bind(this)
   }
 componentDidMount = async() => {
   try {
     const val = await AsyncStorage.getItem('note_value')
     if (val !== null) {
       var data = JSON.parse(val)
-      console.log("data" + data.values )
+      console.log("data" + data )
       this.setState({noteArray: data})
     }
   } catch (e) {
@@ -36,7 +38,9 @@ componentDidMount = async() => {
   }
 }
 
+
   render() {
+    // let notes = this.props.arrNotes.map((val, key) => {
     let notes = this.state.noteArray.map((val, key) => {
       return <Note
                 key = { key }
@@ -52,35 +56,36 @@ componentDidMount = async() => {
       <View style={styles.container}>
         <View style = { styles.header }>
           <Text style = { styles.headerText } > -Note- </Text>
+          <Text style = { styles.headerText }>{ this.props.noteText }</Text>
         </View>
 
         <ScrollView style = { styles.scrollContainer }>
             { notes }
         </ScrollView>
 
-        <View style = { styles.inputWrapper }>
-          <TextInput
-            style = { styles.textInput }
-            onChangeText = { (noteText) => this.setState({ noteText }) }
-            value = { this.state.noteText }
-            placeholder = 'Add somethings ... '
-            placeholderTextColor = '#fff'
-          />
-        </View>
-        <TouchableOpacity style = { styles.addButton } onPress = { this.addNote.bind(this) }>
-          <Text style = { styles.textAddButton }>+</Text>
-        </TouchableOpacity>
+          <View style = { styles.inputWrapper }>
+            <TextInput
+              style = { styles.textInput }
+              onChangeText = { (noteText) => this.setState({ noteText }) }
+              value = { this.state.noteText }
+              placeholder = 'Add somethings ... '
+              placeholderTextColor = '#fff'
+            />
+          </View>
+          <TouchableOpacity style = { styles.addButton } onPress = { this.addNote }>
+            <Text style = { styles.textAddButton }>+</Text>
+          </TouchableOpacity>
       </View>
     );
   }
+
   async addNote(){
-    if (this.state.noteText){
       this.state.noteArray.push({
         'name': this.state.noteText,
         'time': (new Date()).toString(),
         'checked': false
       })
-    }
+      console.log(this.state.noteArray);
     this.crudNote(this.state.noteArray);
     this.setState({ noteText: '' })
   }
@@ -112,6 +117,16 @@ componentDidMount = async() => {
     }
   }
 }
+
+function mapStateToProps(state){
+  return {
+    noteText: state.noteText,
+    arrNotes: state.arrNotes
+   }
+}
+
+export default  connect(mapStateToProps)(Main)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
