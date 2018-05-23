@@ -30,9 +30,6 @@ class Note extends Component {
         <TouchableOpacity style={styles.controller}>
             <Text style={styles.button} onPress={() => this.toggleCheckDone()}> {toggleCharDone_Undone} </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.controller}>
-            <Text style={styles.button} onPress={() => this.toggleCheckDone()}> {toggleCharDone_Undone} </Text>
-        </TouchableOpacity>
       </View>
     );
   }
