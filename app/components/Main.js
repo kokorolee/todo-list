@@ -20,7 +20,6 @@ class Main extends Component {
   constructor(props){
     super(props);
     this.state = {
-      noteArray: data,
       noteText: '',
     }
     this.addNote = this.addNote.bind(this)

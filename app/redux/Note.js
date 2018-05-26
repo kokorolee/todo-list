@@ -17,7 +17,7 @@ class Note extends Component {
     const textDecorationLine = checked ? 'line-through' : 'none'
     const toggleCharDone_Undone = checked ? 'Undone' : 'Done'
     return (
-      <View style={styles.container}>
+      <View keyval={this.props.keyval} style={styles.container}>
         <Text style={{ textDecorationLine }} >{ name }</Text>
         <Text>{ time }</Text>
         <TouchableOpacity style={styles.controller}>

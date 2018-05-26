@@ -2,53 +2,47 @@ import React from 'react';
 import Main from './app/redux/Main.js'
 import { Provider, connect} from 'react-redux'
 import { AsyncStorage } from 'react-native'
-import { createStore,  } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Text, View, TouchableOpacity } from 'react-native';
 import store from './app/redux/redux/store.js'
 import reducer from './app/redux/redux/reducers/reducer.js'
-
-let defaultArrayNotes = createStore(reducer);
 
 export default class App extends React.Component {
 
   constructor (props){
     super(props)
     this.state = {
-      isLoading: true,
-      arrNotes: []
+      isLoading: false,
+      store: store
     }
   }
 
-componentDidMount() {
-  this.getDate()
-  this.setState({isLoading: false})
-}
-getDate = async () =>{
-  try {
-    const val = await AsyncStorage.getItem('note_value')
-    if (val !== null) {
-      console.log('if');
-      var data = JSON.parse(val)
-      console.log('componentDidMount '+ JSON.stringify(data, null,4) )
-      var defaultArrayNotes = {
-        arrNotes: data
+  componentDidMount = async() => {
+    this.setState({ isLoading: true })
+    await AsyncStorage.getItem('note_value').then((value) => {
+      if (value !== null && value.length) {
+        data = JSON.parse(value);
+        let initStore = {
+          arrNotes: data,
+          isAdding: false,
+          filterStatus: 'SHOW_ALL'
+        }
+        this.setState({ store: createStore(reducer, initStore) });
+        this.setState({isLoading: false})
+
+        return JSON.parse(value);
+      } else {
       }
-      this.setState({ arrNotes: createStore(reducer) })
-    }else {
-      console.log(defaultArrayNotes);
-      this.setState(defaultArrayNotes)
-    }
-  } catch (e) {
-    console.error(e)
+    })
+    this.setState({isLoading: false})
   }
-}
 
   render() {
     if (this.state.isLoading){
       return <Text style={{ position: 'absolute', top: '50%', left: '50%'}}>..Loading</Text>
     }
     return (
-        <Provider store = {store}>
+        <Provider store = {this.state.store}>
             <Main/>
         </Provider>
     );
