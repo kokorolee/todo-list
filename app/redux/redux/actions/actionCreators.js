@@ -1,3 +1,4 @@
+import { AsyncStorage } from 'react-native'
 export function toggleAddNote(){
   return {type: 'TOGGLE_ADD_NOTE'}
 }
@@ -17,3 +18,23 @@ export function filterDone(){
 export function filterUnDone(){
   return { type: 'FILTER_UNDONE'}
 }
+//
+// export function getDate (){
+//   try {
+//     const val = await AsyncStorage.getItem('note_value')
+//     if (val !== null) {
+//       console.log('if');
+//       var data = JSON.parse(val)
+//       console.log('componentDidMount '+ JSON.stringify(data, null,4) )
+//       var defaultArrayNotes = {
+//         arrNotes: data
+//       }
+//       this.setState({ arrNotes: createStore(reducer) })
+//     }else {
+//       console.log(defaultArrayNotes);
+//       this.setState(defaultArrayNotes)
+//     }
+//   } catch (e) {
+//     console.error(e)
+//   }
+// }

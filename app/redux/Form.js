@@ -11,32 +11,25 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux'
 import { toggleAddNote, addNote } from './redux/actions/actionCreators.js'
+
+let data = [];
+
 class Form extends Component {
   constructor(props){
     super(props);
     this.state = {
-      noteArray: {
-      },
       name: ''
     }
     this.onAdd = this.onAdd.bind(this)
   }
-  async crudNote(noteArray) {
-    console.log('crud');
-    this.setState({ noteArray: noteArray });
-    try {
-      let parseData = JSON.stringify(noteArray);
-      await AsyncStorage.setItem('note_value',  parseData);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
+
+
   onAdd(){
     const { name } = this.state
     time = new Date() + ''
     this.props.addNote(name, time)
 
-    this.crudNote(name)
     this.setState({ name: '' })
     this.props.toggleAddNote()
   }
@@ -63,8 +56,12 @@ class Form extends Component {
 
 
 }
-
-export default connect(null, {toggleAddNote, addNote})(Form)
+function mapStateToProps(state){
+  return {
+    arrNotes: state.arrNotes,
+   }
+}
+export default connect(mapStateToProps, {toggleAddNote, addNote})(Form)
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',

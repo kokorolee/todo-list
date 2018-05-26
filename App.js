@@ -1,8 +1,8 @@
 import React from 'react';
 import Main from './app/redux/Main.js'
-import { Provider } from 'react-redux'
+import { Provider, connect} from 'react-redux'
 import { AsyncStorage } from 'react-native'
-import { createStore } from 'redux';
+import { createStore,  } from 'redux';
 import { Text, View, TouchableOpacity } from 'react-native';
 import store from './app/redux/redux/store.js'
 import reducer from './app/redux/redux/reducers/reducer.js'
@@ -19,26 +19,28 @@ export default class App extends React.Component {
     }
   }
 
-componentDidMount = async () =>{
+componentDidMount() {
+  this.getDate()
+  this.setState({isLoading: false})
+}
+getDate = async () =>{
   try {
     const val = await AsyncStorage.getItem('note_value')
     if (val !== null) {
       console.log('if');
       var data = JSON.parse(val)
-      console.log("data" + data )
+      console.log('componentDidMount '+ JSON.stringify(data, null,4) )
       var defaultArrayNotes = {
         arrNotes: data
       }
       this.setState({ arrNotes: createStore(reducer) })
     }else {
-      console.log('else');
       console.log(defaultArrayNotes);
       this.setState(defaultArrayNotes)
     }
   } catch (e) {
     console.error(e)
   }
-  this.setState({isLoading: false})
 }
 
   render() {

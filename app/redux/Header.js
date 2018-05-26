@@ -5,17 +5,30 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from 'react-native';
 
 import { connect } from 'react-redux'
 import { toggleAddNote } from './redux/actions/actionCreators.js'
 class Header extends Component {
 
+reload = async() => {
+    try {
+      const val = await AsyncStorage.getItem('note_value')
+      if (val !== null) {
+        var data = JSON.parse(val)
+        console.log("data" + data )
+        this.setState({noteArray: data})
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
   render() {
     return (
       <View style={styles.header}>
-        <TouchableOpacity><Text>Reload</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => this.reload()}><Text>Reload</Text></TouchableOpacity>
         <Text> --Note-- </Text>
         <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.toggleAddNote()}>
           <Text>+</Text>
