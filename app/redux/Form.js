@@ -9,6 +9,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux'
+import { toggleAddNote, addNote } from './redux/actions/actionCreators.js'
 class Form extends Component {
   constructor(props){
     super(props);
@@ -21,19 +22,11 @@ class Form extends Component {
   onAdd(){
     const { name } = this.state
     time = new Date() + ''
-    this.props.dispatch({
-      type: 'ADD_NOTE',
-      name,
-      time
-    })
+    this.props.addNote(name, time)
     this.setState({ name: '' })
-    this.toggleAddNote()
+    this.props.toggleAddNote()
   }
-  toggleAddNote(){
-    this.props.dispatch({
-      type: 'TOGGLE_ADD_NOTE'
-    })
-  }
+
 
   render() {
     return (
@@ -47,14 +40,15 @@ class Form extends Component {
         <View style={styles.container}>
           <Text></Text>
           <TouchableOpacity onPress={this.onAdd}><Text style={styles.button}>Add</Text></TouchableOpacity>
-          <TouchableOpacity><Text style={styles.button} onPress={() => this.toggleAddNote()}>Cancel</Text></TouchableOpacity>
+          <TouchableOpacity><Text style={styles.button} onPress={() => this.props.toggleAddNote()}>Cancel</Text></TouchableOpacity>
           <Text></Text>
         </View>
       </View>
     );
   }
-} 
-export default connect()(Form)
+}
+
+export default connect(null, {toggleAddNote, addNote})(Form)
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
