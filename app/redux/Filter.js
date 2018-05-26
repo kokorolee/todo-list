@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux'
+import { filterShowAll, filterDone, filterUnDone  } from './redux/actions/actionCreators.js'
 class Filter extends Component {
   getStyleFilter(statusName){
     const { filterStatus } = this.props;
@@ -21,13 +22,13 @@ class Filter extends Component {
   render() {
     return (
       <View style={ styles.container}>
-        <TouchableOpacity onPress={() => this.setFilterStatus('FILTER_SHOW_ALL')} >
+        <TouchableOpacity onPress={() => this.props.filterShowAll()} >
           <Text style={this.getStyleFilter('SHOW_ALL') }> ShowAll </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.setFilterStatus('FILTER_DONE')}>
+        <TouchableOpacity onPress={() => this.props.filterDone()}>
           <Text style={this.getStyleFilter("DONE")}> Done </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.setFilterStatus('FILTER_UNDONE')}>
+        <TouchableOpacity onPress={() => this.props.filterUnDone()}>
           <Text style={ this.getStyleFilter("UNDONE")  }> Undone </Text>
         </TouchableOpacity>
       </View>
@@ -52,4 +53,4 @@ function mapStateToProps(state){
   return { filterStatus: state.filterStatus }
 }
 
-export default connect(mapStateToProps)(Filter);
+export default connect(mapStateToProps, { filterShowAll, filterDone, filterUnDone })(Filter);

@@ -11,17 +11,13 @@ import {
 import { connect } from 'react-redux'
 import { toggleAddNote } from './redux/actions/actionCreators.js'
 class Header extends Component {
-  toggleAddNote(){
-    this.props.dispatch({
-      type: 'TOGGLE_ADD_NOTE'
-    })
-  }
+
   render() {
     return (
       <View style={styles.header}>
-        <Text></Text>
+        <TouchableOpacity><Text>Reload</Text></TouchableOpacity>
         <Text> --Note-- </Text>
-        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.toggleAddNote()}>
+        <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.toggleAddNote()}>
           <Text>+</Text>
         </TouchableOpacity>
       </View>
@@ -35,7 +31,7 @@ function mapStateToProps(state){
   }
 }
 
-export default connect(mapStateToProps)(Header)
+export default connect(mapStateToProps, { toggleAddNote })(Header)
 const styles = StyleSheet.create({
   header: {
     flex: 1,

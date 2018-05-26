@@ -9,15 +9,8 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux'
-
+import { toggleCheckDone } from './redux/actions/actionCreators'
 class Note extends Component {
-
-  toggleCheckDone(){
-    this.props.dispatch({
-      type: 'TOGGLE_CHECK_DONE',
-      id: this.props.note.id
-    })
-  }
 
   render() {
     const { name, time, checked } = this.props.note
@@ -28,14 +21,14 @@ class Note extends Component {
         <Text style={{ textDecorationLine }} >{ name }</Text>
         <Text>{ time }</Text>
         <TouchableOpacity style={styles.controller}>
-            <Text style={styles.button} onPress={() => this.toggleCheckDone()}> {toggleCharDone_Undone} </Text>
+            <Text style={styles.button} onPress={() => this.props.toggleCheckDone(this.props.note.id)}> {toggleCharDone_Undone} </Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
 
-export default connect()(Note)
+export default connect(null, {toggleCheckDone})(Note)
 
 const styles = StyleSheet.create({
   container: {
