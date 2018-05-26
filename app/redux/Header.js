@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux'
+import { toggleAddNote } from './redux/actions/actionCreators.js'
 class Header extends Component {
   toggleAddNote(){
     this.props.dispatch({

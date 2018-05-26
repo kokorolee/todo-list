@@ -1,12 +1,5 @@
-
-
 const defaultArrayNotes = [
     { id:1 ,name: 'default', time: 'time', checked: false, isEditting: false  },
-    { id:2 ,name: 'default2', time: 'time', checked: true, isEditting: false  },
-    { id:3 ,name: 'default3', time: 'time', checked: false, isEditting: false  },
-    { id:4 ,name: 'default4', time: 'time', checked: false, isEditting: false  },
-    { id:5 ,name: 'default5', time: 'time', checked: true, isEditting: false  },
-    { id:6 ,name: 'default6', time: 'time', checked: false, isEditting: false  }
 ]
 
 const arrNotesReducer = (state = defaultArrayNotes, action) => {
