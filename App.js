@@ -19,7 +19,7 @@ export default class App extends React.Component {
 
   componentDidMount = async() => {
     this.setState({ isLoading: true })
-    await AsyncStorage.getItem('note_value3').then((value) => {
+    await AsyncStorage.getItem('note_value5').then((value) => {
       if (value !== null && value.length) {
         data = JSON.parse(value);
         let initStore = {

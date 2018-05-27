@@ -8,11 +8,17 @@ export function addNote(name, time){
 export function toggleCheckDone(id){
   return { type: 'TOGGLE_CHECK_DONE', id }
 }
-export function deleteNote(id){
+export function softDeleteNote(id){
   return { type: 'SOFT_DELETE_NOTE', id }
+}
+export function deleteNote(id){
+  return { type: 'HARD_DELETE_NOTE', id }
 }
 export function toggleEdit(id){
   return { type: 'TOGGLE_EDIT', id }
+}
+export function updateNote(id, name){
+  return { type: 'UPDATE_NOTE', id, name }
 }
 export function filterShowAll(){
   return { type: 'FILTER_SHOW_ALL'}

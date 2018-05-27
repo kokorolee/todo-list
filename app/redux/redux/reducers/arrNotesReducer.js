@@ -1,24 +1,25 @@
 import { AsyncStorage } from 'react-native';
-const defaultArrayNotes = [
-
-                          ]
+const defaultArrayNotes = []
 
 const arrNotesReducer = (state = defaultArrayNotes, action) => {
   if (action.type === 'TOGGLE_CHECK_DONE'){
-    note = state.map(e => {
+    notes = state.map(e => {
       if (e.id !== action.id) return e
       return { ...e, checked: !e.checked }
     })
-    crud(note)
-    return note
+    crud(notes)
+    return notes
   }
-  if (action.type === 'SOFT_DELETE_NOTE'){
-    note = state.map(e => {
-      if (e.id !== action.id) return e
-      return { ...e, isDeleted: true }
-    })
-    crud(note)
-    return note
+  if (action.type === 'HARD_DELETE_NOTE'){
+    noteIndex = state.findIndex(e => {
+      return e.id == action.id
+    }) 
+    let notes = [...state]
+    notes.splice(noteIndex, 1)
+
+    crud(notes)
+    return notes
+
   }
   if (action.type === 'TOGGLE_EDIT'){
     note = state.map(e => {
@@ -29,25 +30,37 @@ const arrNotesReducer = (state = defaultArrayNotes, action) => {
     return note
   }
   if (action.type === 'ADD_NOTE'){
-     note = [{
-      id: state.length + 1,
+    id = 0;
+    if (state.length > 0) id = state[0].id + 1
+     note = {
+      id: id,
       name: action.name,
       time: action.time,
       checked: false,
       isEditting: false,
       isDeleted: false
-    }].concat(state)
+    };
+    notes = [ note, ...state ]
+    crud(notes)
+    return notes
+  }
 
-    crud(note)
-    return note
+  if (action.type === 'UPDATE_NOTE'){
+    notes = state.map(e => {
+      if (e.id !== action.id) return e
+      return { ...e, name: action.name }
+    })
+    crud(notes)
+    return notes
   }
   return state
 }
 
+
 const crud = (note) => {
   try {
     let parseData = JSON.stringify(note);
-    AsyncStorage.setItem('note_value3', parseData );
+    AsyncStorage.setItem('note_value5', parseData );
   } catch (error) {
     console.log(error);
   }

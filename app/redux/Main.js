@@ -25,8 +25,8 @@ class Main extends Component {
   getNoteList(){
     const { filterStatus, arrNotes } = this.props
     if (filterStatus === 'SHOW_ALL') return arrNotes.filter(e => !e.isDeleted)
-    if (filterStatus === 'DONE') return arrNotes.filter(e => e.checked)
-    if (filterStatus === 'UNDONE') return arrNotes.filter(e => !e.checked)
+    if (filterStatus === 'DONE') return arrNotes.filter(e => e.checked).filter(e => !e.isDeleted)
+    if (filterStatus === 'UNDONE') return arrNotes.filter(e => !e.checked).filter(e => !e.isDeleted)
   }
 
 
