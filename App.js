@@ -19,13 +19,14 @@ export default class App extends React.Component {
 
   componentDidMount = async() => {
     this.setState({ isLoading: true })
-    await AsyncStorage.getItem('note_value').then((value) => {
+    await AsyncStorage.getItem('note_value3').then((value) => {
       if (value !== null && value.length) {
         data = JSON.parse(value);
         let initStore = {
           arrNotes: data,
           isAdding: false,
-          filterStatus: 'SHOW_ALL'
+          filterStatus: 'SHOW_ALL',
+          isDeleted: false
         }
         this.setState({ store: createStore(reducer, initStore) });
         this.setState({isLoading: false})

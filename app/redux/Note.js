@@ -9,26 +9,40 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux'
-import { toggleCheckDone } from './redux/actions/actionCreators'
+import { toggleCheckDone, toggleEdit, deleteNote } from './redux/actions/actionCreators'
+import { Form } from './Form.js'
 class Note extends Component {
 
   render() {
-    const { name, time, checked } = this.props.note
+    const { name, time, checked, isEditting } = this.props.note
     const textDecorationLine = checked ? 'line-through' : 'none'
     const toggleCharDone_Undone = checked ? 'Undone' : 'Done'
+    const toggleStringEdit = isEditting ? 'Cancel' : 'Edit'
     return (
       <View keyval={this.props.keyval} style={styles.container}>
-        <Text style={{ textDecorationLine }} >{ name }</Text>
-        <Text>{ time }</Text>
+        <View>
+          <Text style={{ textDecorationLine }} >{ name }</Text>
+        </View>
+      <View style= { styles.toggle }>
         <TouchableOpacity style={styles.controller}>
-            <Text style={styles.button} onPress={() => this.props.toggleCheckDone(this.props.note.id)}> {toggleCharDone_Undone} </Text>
-        </TouchableOpacity>
+          <Text style={styles.button} onPress={() => this.props.toggleCheckDone(this.props.note.id)}> { toggleCharDone_Undone } </Text>
+         </TouchableOpacity>
+
+          {/* <TouchableOpacity style={styles.controller}>
+            <Text style={styles.button} onPress={() => this.props.toggleEdit(this.props.note.id)}> { toggleStringEdit } </Text>
+          </TouchableOpacity> */}
+
+          <TouchableOpacity style={styles.controller}>
+            <Text style={styles.button} onPress={ () => this.props.deleteNote(this.props.note.id) } > Delete </Text>
+          </TouchableOpacity>
+      </View>
       </View>
     );
   }
 }
 
-export default connect(null, {toggleCheckDone})(Note)
+
+export default connect(null, {toggleCheckDone, toggleEdit, deleteNote})(Note)
 
 const styles = StyleSheet.create({
   container: {
@@ -44,5 +58,12 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#c3c3c3',
     padding: 10
-  }
+  },
+  toggle: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+    flexDirection: 'row'
+  },
 });

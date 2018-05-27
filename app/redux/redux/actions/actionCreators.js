@@ -8,7 +8,12 @@ export function addNote(name, time){
 export function toggleCheckDone(id){
   return { type: 'TOGGLE_CHECK_DONE', id }
 }
-
+export function deleteNote(id){
+  return { type: 'SOFT_DELETE_NOTE', id }
+}
+export function toggleEdit(id){
+  return { type: 'TOGGLE_EDIT', id }
+}
 export function filterShowAll(){
   return { type: 'FILTER_SHOW_ALL'}
 }
@@ -18,23 +23,3 @@ export function filterDone(){
 export function filterUnDone(){
   return { type: 'FILTER_UNDONE'}
 }
-//
-// export function getDate (){
-//   try {
-//     const val = await AsyncStorage.getItem('note_value')
-//     if (val !== null) {
-//       console.log('if');
-//       var data = JSON.parse(val)
-//       console.log('componentDidMount '+ JSON.stringify(data, null,4) )
-//       var defaultArrayNotes = {
-//         arrNotes: data
-//       }
-//       this.setState({ arrNotes: createStore(reducer) })
-//     }else {
-//       console.log(defaultArrayNotes);
-//       this.setState(defaultArrayNotes)
-//     }
-//   } catch (e) {
-//     console.error(e)
-//   }
-// }

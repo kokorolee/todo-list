@@ -24,7 +24,7 @@ import Form from './Form.js'
 class Main extends Component {
   getNoteList(){
     const { filterStatus, arrNotes } = this.props
-    if (filterStatus === 'SHOW_ALL') return arrNotes
+    if (filterStatus === 'SHOW_ALL') return arrNotes.filter(e => !e.isDeleted)
     if (filterStatus === 'DONE') return arrNotes.filter(e => e.checked)
     if (filterStatus === 'UNDONE') return arrNotes.filter(e => !e.checked)
   }
@@ -52,17 +52,6 @@ class Main extends Component {
 }
 
 function mapStateToProps(state) {
-  let arrNotes = []
-  AsyncStorage.getItem('note_value').then((value) => {
-    if (value !== null && value.length) {
-      arrNotes = JSON.parse(value);
-      console.log(arrNotes);
-      setState({arrNotes : arrNotes})
-    } else {
-      console.log(2);
-    }
-  })
-  
   return {
     filterStatus: state.filterStatus,
     arrNotes: state.arrNotes,
