@@ -23,16 +23,34 @@ class Note extends Component {
     const { name, time, checked, isEditting } = this.props.note
     const textDecorationLine = checked ? 'line-through' : 'none'
     const toggleCharDone_Undone = checked ? 'Undone' : 'Done'
-    const toggleStringEdit = this.state.isEditting ? 'Cancel' : 'Edit'
+    const toggleStringEdit = this.state.isEditting ? 'Save' : 'Edit'
 
     let noteEdit = ''
     if (this.state.isEditting){
       noteEdit = <TextInput
+        multiline = {true} 
+        numberOfLines = {4}
         value={this.state.editContent}
         onChangeText={(editContent) => this.setState({ editContent })}
       />
     }else {
       noteEdit =  <Text style={{ textDecorationLine }} >{ name }</Text>
+    }
+    let noteControll = ''
+    if (this.state.isEditting) { 
+      noteControll = 
+      <View>
+          <TouchableOpacity style={styles.controller}>
+            <Text style={styles.button} onPress={() => this.toggleEdit(this.props.note.id)}> { toggleStringEdit } </Text>
+          </TouchableOpacity>
+      </View>
+    }else{
+      noteControll = 
+      <View>
+          <TouchableOpacity style={styles.controller}>
+            <Text style={styles.button} onPress={() => this.toggleEdit(this.props.note.id)}> { toggleStringEdit } </Text>
+          </TouchableOpacity>
+      </View>
     }
 
     return (
@@ -41,17 +59,32 @@ class Note extends Component {
          { noteEdit }
         </View>
       <View style= { styles.toggle }>
-        <TouchableOpacity style={styles.controller}>
-          <Text style={styles.button} onPress={() => this.props.toggleCheckDone(this.props.note.id)}> { toggleCharDone_Undone } </Text>
-         </TouchableOpacity>
+        { !this.state.isEditting ? 
+           <TouchableOpacity style={styles.controller}>
+            <Text style={styles.button} onPress={() => this.props.toggleCheckDone(this.props.note.id)}> { toggleCharDone_Undone } </Text>
+          </TouchableOpacity>  
+          : null
+        }
+       
 
           <TouchableOpacity style={styles.controller}>
             <Text style={styles.button} onPress={() => this.toggleEdit(this.props.note.id)}> { toggleStringEdit } </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.controller}>
-            <Text style={styles.button} onPress={ () => this.props.deleteNote(this.props.note.id) } > Delete </Text>
-          </TouchableOpacity>
+          { this.state.isEditting ? 
+              <TouchableOpacity style={styles.controller}>
+                <Text style={styles.button} onPress={() => this.toggleNotEdit(this.props.note.id)}>  Cancle </Text>
+              </TouchableOpacity>
+              : null
+           }
+
+          { !this.state.isEditting ?           
+            <TouchableOpacity style={styles.controller}>
+              <Text style={styles.button} onPress={ () => this.props.deleteNote(this.props.note.id) } > Delete </Text>
+            </TouchableOpacity> 
+            : null
+          }
+
       </View>
       </View>
     );
@@ -66,7 +99,11 @@ class Note extends Component {
       isEditting: !this.state.isEditting,
       editContent: this.props.note.name
      })
-
+  }
+  toggleNotEdit(id) {
+    this.setState({ 
+      isEditting: false,
+     })
   }
 }
 
@@ -94,5 +131,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     flexDirection: 'row'
+  },
+  editInput:{
+    height: 30
   },
 });

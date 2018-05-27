@@ -28,7 +28,8 @@ class Form extends Component {
   onAdd(){
     const { name } = this.state
     time = new Date() + ''
-    this.props.addNote(name, time)
+    if (name !== '')
+      this.props.addNote(name, time)
 
     this.setState({ name: '' })
     this.props.toggleAddNote()
@@ -43,6 +44,7 @@ class Form extends Component {
           onChangeText={text => this.setState({ name: text })}
           value = { this.state.name }
           placeholder='Add somethings'
+          placeholderTextColor="#000"
         />
         <View style={styles.container}>
           <Text></Text>
@@ -77,6 +79,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     height: 40,
     alignItems: 'stretch',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }
 });

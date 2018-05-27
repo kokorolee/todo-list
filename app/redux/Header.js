@@ -33,7 +33,7 @@ getDate = async () =>{
         <Text></Text>
         <Text> --Note-- </Text>
         <TouchableOpacity style={styles.buttonAdd} onPress={() => this.props.toggleAddNote()}>
-          <Text>+</Text>
+          <Text style={ styles.buttonText} >+</Text>
         </TouchableOpacity>
       </View>
 
@@ -60,5 +60,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#0a9f22',
     height: 30,
     width: 30,
+    alignItems: 'center',
+  },
+  buttonText: {
+    alignItems: 'center',
+    marginTop: 5
   }
 });
